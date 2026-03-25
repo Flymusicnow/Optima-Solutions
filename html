@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Optima Solutions — AI • Ljud • System</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080810;
+  --bg2: #0e0e1a;
+  --card: #11111f;
+  --border: rgba(255,255,255,0.06);
+  --accent: #00FFB2;
+  --accent2: #7B6EFF;
+  --gold: #F5C842;
+  --text: #F0F0FF;
+  --muted: #6B6B8A;
+  --white: #ffffff;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+}
+
+/* NOISE TEXTURE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  background: rgba(8,8,16,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.08em;
+  color: var(--white);
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+.nav-cta {
+  background: var(--accent);
+  color: #000 !important;
+  padding: 10px 22px;
+  border-radius: 6px;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  transition: all 0.2s !important;
+}
+.nav-cta:hover { background: #fff !important; transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 24px 80px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(0,255,178,0.05) 0%, rgba(123,110,255,0.04) 40%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-glow2 {
+  position: absolute;
+  top: 20%;
+  right: -200px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(123,110,255,0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0,255,178,0.08);
+  border: 1px solid rgba(0,255,178,0.2);
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 32px;
+  animation: fadeDown 0.8s ease both;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(64px, 12vw, 160px);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  margin-bottom: 8px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+
+.hero-title .line1 { color: var(--white); }
+.hero-title .line2 {
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: clamp(16px, 2vw, 22px);
+  color: var(--muted);
+  font-weight: 300;
+  max-width: 560px;
+  line-height: 1.6;
+  margin: 28px auto 48px;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-sub strong { color: var(--text); font-weight: 600; }
+
+.hero-btns {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+  padding: 16px 36px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+}
+.btn-primary:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,255,178,0.25); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  padding: 16px 36px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+
+.hero-tags {
+  display: flex;
+  gap: 24px;
+  margin-top: 72px;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  animation: fadeUp 0.8s 0.4s ease both;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero-tags span { display: flex; align-items: center; gap: 8px; }
+.hero-tags span::before { content: '//'; color: var(--accent); }
+
+/* SCROLL LINE */
+.scroll-line {
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  margin: 0 auto;
+  animation: fadeIn 1s 1s both;
+}
+
+/* SECTION BASE */
+section { padding: 100px 24px; }
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::before { content: '01'; color: var(--muted); }
+.section-label.s2::before { content: '02'; }
+.section-label.s3::before { content: '03'; }
+.section-label.s4::before { content: '04'; }
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  margin-bottom: 20px;
+}
+
+.section-title span { color: var(--accent); }
+
+.section-desc {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 60px;
+}
+
+/* SERVICES */
+#services { background: var(--bg2); }
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.service-card {
+  background: var(--card);
+  padding: 36px 30px;
+  transition: background 0.25s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.3s;
+}
+
+.service-card:hover { background: #161625; }
+.service-card:hover::after { transform: scaleX(1); }
+
+.s-ico {
+  font-size: 36px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.s-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.s-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.s-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.s-list li {
+  font-size: 13px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.s-list li::before {
+  content: '→';
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+/* PRISER */
+#priser { background: var(--bg); }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.price-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 30px;
+  position: relative;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.price-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0,255,178,0.2);
+}
+
+.price-card.featured {
+  border-color: rgba(0,255,178,0.35);
+  background: linear-gradient(135deg, #11111f, #141428);
+}
+
+.price-card.featured::before {
+  content: 'POPULÄRAST';
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.price-tier {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.price-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.price-amt {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.price-amt span { font-size: 16px; color: var(--muted); }
+
+.price-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+.price-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 24px;
+}
+
+.price-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.price-features li {
+  font-size: 14px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.price-features li::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.price-btn {
+  display: block;
+  text-align: center;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+  letter-spacing: 0.05em;
+  font-family: 'Outfit', sans-serif;
+}
+
+.price-btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.price-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+.price-btn-solid {
+  background: var(--accent);
+  color: #000;
+  border: none;
+}
+.price-btn-solid:hover { background: #fff; transform: translateY(-1px); }
+
+/* OM */
+#om { background: var(--bg2); }
+
+.om-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.om-visual {
+  position: relative;
+}
+
+.om-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.om-box::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(0,255,178,0.08) 0%, transparent 70%);
+}
+
+.om-initial {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 120px;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+}
+
+.om-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.om-role {
+  font-size: 13px;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.om-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.om-stat {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.om-stat-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.om-stat-lbl {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.om-text p {
+  font-size: 17px;
+  color: var(--muted);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.om-text strong { color: var(--text); font-weight: 600; }
+
+.om-quote {
+  background: var(--card);
+  border-left: 3px solid var(--accent);
+  padding: 20px 24px;
+  border-radius: 0 10px 10px 0;
+  margin-top: 32px;
+  font-size: 16px;
+  color: var(--text);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* KONTAKT */
+#kontakt { background: var(--bg); }
+
+.kontakt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.kontakt-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.form-input, .form-select, .form-textarea {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 15px 18px;
+  font-size: 15px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  -webkit-appearance: none;
+}
+
+.form-input::placeholder, .form-textarea::placeholder { color: var(--muted); }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: rgba(0,255,178,0.4); }
+.form-select option { background: #11111f; }
+
+.form-textarea {
+  resize: vertical;
+  min-height: 140px;
+}
+
+.form-btn {
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  padding: 17px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.04em;
+  transition: all 0.2s;
+}
+.form-btn:hover { background: #fff; transform: translateY(-1px); }
+
+.kontakt-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.info-ico {
+  width: 44px;
+  height: 44px;
+  background: rgba(0,255,178,0.08);
+  border: 1px solid rgba(0,255,178,0.2);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.info-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.info-val {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.kontakt-promise {
+  background: var(--card);
+  border: 1px solid rgba(0,255,178,0.15);
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 8px;
+}
+
+.promise-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.promise-text {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* FOOTER */
+footer {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  padding: 40px 24px;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 0.08em;
+  color: var(--white);
+}
+.footer-logo span { color: var(--accent); }
+
+.footer-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+.footer-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--accent); }
+
+.footer-copy {
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--accent);
+  color: #000;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  z-index: 9000;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,255,178,0.5); }
+  50% { box-shadow: 0 0 0 5px rgba(0,255,178,0); }
+}
+
+/* REVEAL ON SCROLL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+
+  section { padding: 70px 20px; }
+
+  .om-grid, .kontakt-grid { grid-template-columns: 1fr; gap: 40px; }
+  .om-initial { font-size: 80px; }
+
+  .form-row { grid-template-columns: 1fr; }
+
+  .footer-inner { flex-direction: column; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">OPTIMA<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Tjänster</a></li>
+    <li><a href="#priser">Priser</a></li>
+    <li><a href="#om">Om Lajo</a></li>
+    <li><a href="#kontakt" class="nav-cta">Boka konsultation</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-badge">Göteborg · Tillgänglig nu</div>
+
+  <div class="hero-title">
+    <div class="line1">SMARTA</div>
+    <div class="line2">LÖSNINGAR</div>
+  </div>
+
+  <p class="hero-sub">
+    Vi hjälper företag och kreatörer att arbeta <strong>smartare</strong> — genom att koppla ihop AI, teknik och ljud till system som faktiskt <strong>fungerar</strong>.
+  </p>
+
+  <div class="hero-btns">
+    <a href="#kontakt" class="btn-primary">Boka gratis genomgång</a>
+    <a href="#services" class="btn-ghost">Se tjänster →</a>
+  </div>
+
+  <div class="hero-tags">
+    <span>AI & Automatisering</span>
+    <span>Ljud & Produktion</span>
+    <span>Systemintegration</span>
+  </div>
+</section>
+
+<div class="scroll-line"></div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="section-label">Tjänster</div>
+    <h2 class="section-title">VAD VI <span>GÖR</span></h2>
+    <p class="section-desc">Fyra kompetensområden. En kontaktperson. Lösningar som faktiskt levererar.</p>
+
+    <div class="services-grid reveal">
+      <div class="service-card">
+        <span class="s-ico">🧠</span>
+        <div class="s-title">AI & Automatisering</div>
+        <p class="s-desc">Vi implementerar AI-lösningar som effektiviserar ditt arbete och frigör din tid för det som faktiskt spelar roll.</p>
+        <ul class="s-list">
+          <li>Automatisering av arbetsflöden</li>
+          <li>AI-assistenter & chatbots</li>
+          <li>Innehåll & kommunikation</li>
+          <li>Skräddarsydda AI-system</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="s-ico">🎧</span>
+        <div class="s-title">Ljud & Musik</div>
+        <p class="s-desc">Professionell ljudproduktion på radionivå — för artister, företag och kreatörer som inte kompromissar med kvalitet.</p>
+        <ul class="s-list">
+          <li>Mixning & mastering</li>
+          <li>Musikproduktion & beats</li>
+          <li>Podcastljud & voiceover</li>
+          <li>Instrumentaler</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="s-ico">🔌</span>
+        <div class="s-title">Systemintegration</div>
+        <p class="s-desc">Vi kopplar ihop dina digitala system så att allt pratar med varandra — utan krångel, utan mellanrum.</p>
+        <ul class="s-list">
+          <li>API-integrationer</li>
+          <li>Uppkoppling av verktyg</li>
+          <li>Optimering av teknikmiljö</li>
+          <li>Teknisk problemlösning</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <span class="s-ico">💬</span>
+        <div class="s-title">Konsultation</div>
+        <p class="s-desc">Inte säker på vad du behöver? Vi sätter oss ner, lyssnar och hjälper dig hitta rätt väg framåt.</p>
+        <ul class="s-list">
+          <li>Gratis första genomgång</li>
+          <li>Tech-strategi för småföretag</li>
+          <li>Digital transformation</li>
+          <li>Prioritering & roadmap</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRISER -->
+<section id="priser">
+  <div class="container">
+    <div class="section-label s2">Investering</div>
+    <h2 class="section-title">TYDLIGA <span>PRISER</span></h2>
+    <p class="section-desc">Inga dolda avgifter. Inga överraskningar. Du vet exakt vad du får.</p>
+
+    <div class="pricing-grid reveal">
+      <div class="price-card">
+        <div class="price-tier">Start</div>
+        <div class="price-name">Kom igång</div>
+        <div class="price-amt">5 000 – 10 000 <span>kr</span></div>
+        <p class="price-desc">Konsultation + enklare setup. Perfekt för dig som vill ta ett första steg.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Konsultation & analys</li>
+          <li>Enklare AI-setup eller ljudjobb</li>
+          <li>Dokumentation ingår</li>
+          <li>Uppföljning 1 vecka</li>
+        </ul>
+        <a href="#kontakt" class="price-btn price-btn-ghost">Kom igång</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-tier">Standard</div>
+        <div class="price-name">Bygg rätt</div>
+        <div class="price-amt">10 000 – 20 000 <span>kr</span></div>
+        <p class="price-desc">AI-system eller full ljudproduktion. För dig som vill ha ett ordentligt resultat.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Komplett lösning</li>
+          <li>AI-system eller 3 låtar/projekt</li>
+          <li>Integration & testning</li>
+          <li>Uppföljning 1 månad</li>
+          <li>Prioriterad support</li>
+        </ul>
+        <a href="#kontakt" class="price-btn price-btn-solid">Välj Standard</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-tier">Premium</div>
+        <div class="price-name">Full kraft</div>
+        <div class="price-amt">20 000+ <span>kr</span></div>
+        <p class="price-desc">Full lösning + integration + löpande support. När du vill ha allt på plats.</p>
+        <div class="price-divider"></div>
+        <ul class="price-features">
+          <li>Allt i Standard</li>
+          <li>Systemintegration ingår</li>
+          <li>Löpande support 3 mån</li>
+          <li>Dedikerad kontakt</li>
+          <li>Skräddarsydd roadmap</li>
+        </ul>
+        <a href="#kontakt" class="price-btn price-btn-ghost">Prata Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OM LAJO -->
+<section id="om">
+  <div class="container">
+    <div class="section-label s3">Personen bakom</div>
+    <div class="om-grid reveal">
+      <div class="om-visual">
+        <div class="om-box">
+          <div class="om-initial">L</div>
+          <div class="om-name">LAJO</div>
+          <div class="om-role">AI-specialist · Ljudproducent · Systembyggare</div>
+          <div class="om-stats">
+            <div class="om-stat">
+              <div class="om-stat-val">∞</div>
+              <div class="om-stat-lbl">Nyfikenhet</div>
+            </div>
+            <div class="om-stat">
+              <div class="om-stat-val">100%</div>
+              <div class="om-stat-lbl">Hängivenhet</div>
+            </div>
+            <div class="om-stat">
+              <div class="om-stat-val">GBG</div>
+              <div class="om-stat-lbl">Göteborg</div>
+            </div>
+            <div class="om-stat">
+              <div class="om-stat-val">PRO</div>
+              <div class="om-stat-lbl">Nivå</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="om-text">
+        <h2 class="section-title" style="font-size:clamp(36px,5vw,64px)">EN PERSON. <span>BRED KOMPETENS.</span></h2>
+
+        <p>Lajo är en självlärd musikproducent med högskoleutbildning inom <strong>ljud, podcast och mediaproduktion</strong> — kompletterat med djup kunskap inom AI och moderna tekniksystem.</p>
+
+        <p>Han arbetar med allt från <strong>mixning och mastering på radionivå</strong> till avancerade AI-lösningar och teknisk systemintegration. Kreativitet och teknik kombineras för att skapa lösningar med hög kvalitet.</p>
+
+        <p>Med Lajo får du en partner som förstår både <strong>konst och kod</strong> — och som levererar utan krångel.</p>
+
+        <div class="om-quote">
+          "Jag hjälper dig spara tid och förbättra kvalitet — så du kan fokusera på det du älskar att göra."
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt">
+  <div class="container">
+    <div class="section-label s4">Kom igång</div>
+    <h2 class="section-title">BOKA <span>KONSULTATION</span></h2>
+    <p class="section-desc">Första genomgången är kostnadsfri. Vi lyssnar, analyserar och berättar vad vi kan göra för dig.</p>
+
+    <div class="kontakt-grid reveal">
+      <form class="kontakt-form" onsubmit="sendForm(event)">
+        <div class="form-row">
+          <input class="form-input" id="f-name" placeholder="Ditt namn" required />
+          <input class="form-input" id="f-email" type="email" placeholder="E-post" required />
+        </div>
+        <select class="form-select" id="f-service">
+          <option value="">Vilken tjänst är du intresserad av?</option>
+          <option>AI & Automatisering</option>
+          <option>Ljud & Musikproduktion</option>
+          <option>Systemintegration</option>
+          <option>Konsultation / Vet ej</option>
+        </select>
+        <textarea class="form-textarea" id="f-msg" placeholder="Berätta kort om ditt projekt eller vad du vill uppnå..."></textarea>
+        <button type="submit" class="form-btn">Skicka — kostnadsfritt →</button>
+      </form>
+
+      <div class="kontakt-info">
+        <div class="info-item">
+          <div class="info-ico">📍</div>
+          <div>
+            <div class="info-label">Plats</div>
+            <div class="info-val">Göteborg, Sverige</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-ico">⚡</div>
+          <div>
+            <div class="info-label">Svarstid</div>
+            <div class="info-val">Inom 24 timmar</div>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-ico">💬</div>
+          <div>
+            <div class="info-label">Format</div>
+            <div class="info-val">Digitalt möte eller fysiskt i Göteborg</div>
+          </div>
+        </div>
+
+        <div class="kontakt-promise">
+          <div class="promise-title">Vår garanti</div>
+          <p class="promise-text">Vi säljer inte teknik för teknikens skull. Vi säljer <strong style="color:var(--text)">resultat</strong> — effektivitet, kvalitet och fungerande system. Om vi inte kan hjälpa dig, säger vi det rakt ut.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">OPTIMA<span>.</span></div>
+    <ul class="footer-links">
+      <li><a href="#services">Tjänster</a></li>
+      <li><a href="#priser">Priser</a></li>
+      <li><a href="#om">Om Lajo</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Optima Solutions · Göteborg</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth nav highlight
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.background = window.scrollY > 50 ? 'rgba(8,8,16,0.97)' : 'rgba(8,8,16,0.85)';
+});
+
+// Form
+function sendForm(e) {
+  e.preventDefault();
+  const name = document.getElementById('f-name').value;
+  const email = document.getElementById('f-email').value;
+  const service = document.getElementById('f-service').value;
+  const msg = document.getElementById('f-msg').value;
+  if (!name || !email) return;
+  // Here you would send to backend / email service
+  showToast('Tack ' + name.split(' ')[0] + '! Vi hör av oss inom 24h ✓');
+  e.target.reset();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
